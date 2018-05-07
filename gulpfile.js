@@ -1,8 +1,4 @@
 var gulp = require('gulp');
-//载入less
-var less=require('gulp-less');
-//css压缩
-var cssnano=require('gulp-cssnano');
 var $ = require('gulp-load-plugins')();
 var open = require('open');
 //目录变量
@@ -32,16 +28,24 @@ gulp.task('json', function() {
   .pipe(gulp.dest(app.prdPath + 'data'))
   .pipe($.connect.reload());
 });
+//less编译压缩合并
+// gulp.task('style',function(){
+//   gulp.src([app.srcPath +'style/*.less','!'+app.srcPath +'styles/_*.less'])
+//   .pipe($.less())
+//   .pipe(gulp.dest(app.devPath + 'css'))
+//   .pipe($.cssmin())
+//   .pipe(gulp.dest(app.prdPath + 'css'))
+// });
+
 //less文件编译
 gulp.task('style', function() {
-  gulp.src(app.srcPath + 'style/*.less')
+  gulp.src(app.srcPath + 'style/index.less')
   // .pipe($.plumber())
-  .pipe(less())
-  .pipe(cssnano())
+  .pipe($.less())
   .pipe(gulp.dest(app.devPath + 'css'))
-  // .pipe($.cssmin())
+  .pipe($.cssmin())
   .pipe(gulp.dest(app.prdPath + 'css'))
-  .pipe($.connect.reload());
+  // .pipe($.connect.reload());
 });
 //js任务
 gulp.task('js', function() {
@@ -68,7 +72,7 @@ gulp.task('clean', function() {
   .pipe($.clean());
 });
 //总构建任务
-gulp.task('build', ['image', 'js', 'lib', 'html', 'json']);
+gulp.task('build', ['image', 'js', 'style','lib', 'html', 'json']);
 //服务器
 gulp.task('serve', ['build'], function() {
   $.connect.server({
@@ -77,15 +81,15 @@ gulp.task('serve', ['build'], function() {
     //自动刷新浏览器
     livereload: true,
     //端口
-    port: 3002
+    port: 3003
   });
   //打开地址
-  open('http://localhost:3002');
+  open('http://localhost:3003');
 
   gulp.watch('bower_components/**/*', ['lib']);
   gulp.watch(app.srcPath + '**/*.html', ['html']);
   gulp.watch(app.srcPath + 'data/**/*.json', ['json']);
-  // gulp.watch(app.srcPath + 'style/**/*.less', ['less']);
+  gulp.watch(app.srcPath + 'style/**/*.less', ['less']);
   gulp.watch(app.srcPath + 'script/**/*.js', ['js']);
   gulp.watch(app.srcPath + 'images/**/*', ['image']);
 

@@ -38,7 +38,7 @@ gulp.task('json', function() {
 // });
 
 //less文件编译
-gulp.task('style', function() {
+gulp.task('less', function() {
   gulp.src(app.srcPath + 'style/index.less')
   // .pipe($.plumber())
   .pipe($.less())
@@ -72,7 +72,7 @@ gulp.task('clean', function() {
   .pipe($.clean());
 });
 //总构建任务
-gulp.task('build', ['image', 'js', 'style','lib', 'html', 'json']);
+gulp.task('build', ['image', 'js', 'less','lib', 'html', 'json']);
 //服务器
 gulp.task('serve', ['build'], function() {
   $.connect.server({
@@ -92,7 +92,6 @@ gulp.task('serve', ['build'], function() {
   gulp.watch(app.srcPath + 'style/**/*.less', ['less']);
   gulp.watch(app.srcPath + 'script/**/*.js', ['js']);
   gulp.watch(app.srcPath + 'images/**/*', ['image']);
-
   });
   //默认任务
   gulp.task('default', ['serve']);
